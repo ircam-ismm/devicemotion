@@ -1,0 +1,16 @@
+{
+  "name": "soundworks",
+  "author": "",
+
+  "clients": {
+    "player": {
+      "target": "browser",
+      "default": true
+    },
+    "logger": {
+      "target": "browser",
+    },
+  },
+
+  "htmlTemplateDirectory": ".build/server/tmpl",
+}
