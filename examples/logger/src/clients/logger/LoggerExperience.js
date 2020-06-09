@@ -20,9 +20,9 @@ class LoggerExperience extends Experience {
     this.playerStates = new Map();
     this.playerGuis = new Map()
 
-    this.client.stateManager.observe(async (schemaName, nodeId) => {
+    this.client.stateManager.observe(async (schemaName, stateId, nodeId) => {
       if (schemaName === 'player') {
-        const playerState = await this.client.stateManager.attach(schemaName, nodeId);
+        const playerState = await this.client.stateManager.attach(schemaName, stateId, nodeId);
         this.playerStates.set(nodeId, playerState);
 
         playerState.onDetach(() => {
@@ -69,19 +69,19 @@ class LoggerExperience extends Experience {
         style="
           margin-right: 240px;
           box-sizing: border-box;
-          padding: 10px;
+          padding: 20px;
         "
       >
         <div style="
           margin-bottom: 14px;
         ">
-          <h2 style="font-size: 13px; margin: 10px 0">acc</h2>
+          <h2 style="font-size: 16px; margin: 10px 0">accelerationIncludingGravity (accelerometer)</h2>
           <ul>
             <li>x: <span style="color: #4682B4">blue</span>
-            <li>x: <span style="color: #ffa500">orange</span>
-            <li>x: <span style="color: #00e600">green</span>
+            <li>y: <span style="color: #ffa500">orange</span>
+            <li>z: <span style="color: #00e600">green</span>
           </li>
-          <h2 style="font-size: 13px; margin: 10px 0">gyro</h2>
+          <h2 style="font-size: 16px; margin: 10px 0">rotationRate (gyroscopes)</h2>
           <ul>
             <li>alpha (yaw): <span style="color: #4682B4">blue</span>
             <li>beta (pitch): <span style="color: #ffa500">orange</span>
@@ -121,13 +121,13 @@ class LoggerExperience extends Experience {
         padding: 10px;
         overflow-y: auto;
       ">
-        <h2>axis</h2>
+        <h2>accelerometer axis</h2>
         <img src="./images/axis.png" style="width: 100%" />
-        <h2>alpha</h2>
+        <h2>gyroscope alpha</h2>
         <img src="./images/rotation-alpha.png" style="width: 100%" />
-        <h2>beta</h2>
+        <h2>gyroscope beta</h2>
         <img src="./images/rotation-beta.png" style="width: 100%" />
-        <h2>gamma</h2>
+        <h2>gyroscope gamma</h2>
         <img src="./images/rotation-gamma.png" style="width: 100%" />
       </div>
     `, this.$container);

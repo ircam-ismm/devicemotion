@@ -2,7 +2,12 @@ import { Experience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
 import renderAppInitialization from '../views/renderAppInitialization';
 import devicemotion from '@ircam/devicemotion';
-import debounce from 'lodash.debounce';
+
+import os from 'platform-detect/os.mjs';
+import browser from 'platform-detect/browser.mjs';
+const { windows, android, macos, ios, linuxBased } = os;
+const { chrome, edge, safari, firefox } = browser;
+
 
 class PlayerExperience extends Experience {
   constructor(client, config = {}, $container) {
@@ -23,12 +28,41 @@ class PlayerExperience extends Experience {
     this.state = await this.client.stateManager.create('player');
     this.state.subscribe(updates => this.renderApp());
 
+    this.state.set({
+      os: windows ? 'windows' :
+          android ? 'android' :
+          macos ? 'macos' :
+          ios ? 'ios' :
+          linuxBased ? 'linuxBased' :
+          'unknown',
+      browser: chrome ? 'chrome' :
+               edge ? 'edge' :
+               safari ? 'safari' :
+               firefox ? 'firefox' :
+               'unknown',
+      });
+
     this.event = null;
     this.renderApp();
   }
 
   async startSensors() {
+    console.log('- first `devicemotion.requestPermission()`');
     const permission = await devicemotion.requestPermission();
+    console.log(`> permission ${permission}`);
+
+    // request permission a sconced time, it has been seen to chrome returns
+    // denied the second time ot was called
+    {
+      console.log('- second `devicemotion.requestPermission()`');
+      const _permission = await devicemotion.requestPermission();
+      console.log(`> permission ${_permission}`);
+
+      if (_permission !== permission) {
+        throw new Error(`requestPermission doesn't return a consistent permission when called twice`);
+      }
+    }
+
     this.state.set({ permission });
 
     if (permission === 'granted') {
@@ -67,6 +101,8 @@ class PlayerExperience extends Experience {
         this.renderApp();
       });
     }
+
+    this.renderApp();
   }
 
   renderApp() {

@@ -1,5 +1,10 @@
-import { windows, android, macos, ios, linuxBased } from 'platform-detect/os.mjs'
-import { chrome, edge, safari, firefox } from 'platform-detect/browser.mjs'
+// platform-detect documentation is wrong because of that:
+// https://stackoverflow.com/questions/43814830/destructuring-a-default-export-object
+// so we destructure later on...
+import os from 'platform-detect/os.mjs';
+import browser from 'platform-detect/browser.mjs';
+const { windows, android, macos, ios, linuxBased } = os;
+const { chrome, edge, safari, firefox } = browser;
 
 /**
  *
@@ -77,6 +82,7 @@ const listeners = new Set();
  * Chrome  -> interval: 16
  */
 const devicemotion = {
+  _available: null,
   _checkTimeoutId: null,
   _resolveCheck: null,
   _processFunction: null,
@@ -92,7 +98,7 @@ const devicemotion = {
    */
   async _init() {
     this._check = this._check.bind(this);
-    this._sanitize = this._sanitize.bind(this);
+    this._normalize = this._normalize.bind(this);
     this._process = this._process.bind(this);
 
     return new Promise(resolve => {
@@ -122,7 +128,7 @@ const devicemotion = {
 
     // in firefox android, accelerationIncludingGravity retrieve `null`
     // values on the first callback. so wait a second call to be sure.
-    // we do that way because we don't if it comes from this bug or if
+    // we do that way because we don't know if it comes from this bug or if
     // `accelerationIncludingGravity` is just unavailable
     // @todo - check if still true
     if (android && firefox && this._androidFirefoxCheckCounter < 1) {
@@ -152,9 +158,9 @@ const devicemotion = {
         (typeof e.rotationRate.gamma === 'number')
       );
 
-      // now that the sensors are checked, replace the process function with
-      // the listener deidcated at sintizing data.
-      this._processFunction = this._sanitize;
+      // now that the sensors are checked, replace the `_processFunction`
+      // with the listener dedicated at normalizing data.
+      this._processFunction = this._normalize;
       this._resolveCheck(true);
     }
   },
@@ -162,7 +168,7 @@ const devicemotion = {
   /**
    * clean values and propagate
    */
-  _sanitize(e) {
+  _normalize(e) {
     if (listeners.size === 0) {
       return;
     }
@@ -227,16 +233,23 @@ const devicemotion = {
 
 
   async requestPermission() {
+    // return already determined permission
+    // also prevent `_process` to be registered twice`
+    if (this._available !== null) {
+      return this._available;
+    }
+
     // window.DeviceMotionEvent:
     // * implemented in: Chrome and Firefox desktop (Mac)
     // * not implemented in: Safari desktop (Mac)
     // * TBD: Edge
     //
-    // If no https:
+    // If not `https` connection:
     // * is not defined in Chrome Android (checked version 77)
     // * permission is denied in iOS > 13
+
     if (!window.DeviceMotionEvent) {
-      return 'denied';
+      this._available = 'denied';
     // iOS 13+
     } else if (window.DeviceMotionEvent.requestPermission) {
       const permission = await window.DeviceMotionEvent.requestPermission();
@@ -246,18 +259,21 @@ const devicemotion = {
         available = await this._init();
       }
 
-      return (available && permission === 'granted') ? 'granted' : 'denied';
+      this._available = (available && permission === 'granted') ? 'granted' : 'denied';
     } else {
       // Safari < 12.1.3 goes there
       // Safari 12.2.x and 12.3 require to enable a flag in Settings
+      // Chrome Android goes there too (tested v83)
       //
       // here we still have desktop browsers that implements to API but will
       // never fire any event (OSX Chrome and Firefox, Windows TBD).
       // they will thus be matched by the `init` method
       const available = await this._init();
 
-      return available ? 'granted' : 'denied';
+      this._available = available ? 'granted' : 'denied';
     }
+
+    return this._available;
   },
 
   addEventListener(callback) {

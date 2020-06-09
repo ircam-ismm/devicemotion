@@ -5,8 +5,13 @@ export default {
     default: null,
     nullable: true,
   },
-  navigator: {
-    type: 'boolean',
+  os: {
+    type: 'string',
+    default: null,
+    nullable: true,
+  },
+  browser: {
+    type: 'string',
     default: null,
     nullable: true,
   },
