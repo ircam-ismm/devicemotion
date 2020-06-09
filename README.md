@@ -1,6 +1,6 @@
 # `@ircam/devicemotion`
 
-> Low level library dedicated at normalizing browsers according to the specification ((https://www.w3.org/TR/orientation-event/#devicemotion)[https://www.w3.org/TR/orientation-event/#devicemotion])
+> Low level library dedicated at normalizing `devicemotion` (`accelerationIncludingGravity` and `rotationRate`) across browsers according to the specification ((https://www.w3.org/TR/orientation-event/#devicemotion)[https://www.w3.org/TR/orientation-event/#devicemotion])
 
 ## Install
 

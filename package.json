@@ -1,7 +1,7 @@
 {
   "name": "@ircam/devicemotion",
   "version": "1.2.1",
-  "description": "Low level library dedicated at normalizing devicemotion accross browsers",
+  "description": "Low level library dedicated at normalizing devicemotion across browsers",
   "main": "dist/devicemotion.js",
   "author": "Benjamin Matuszewski",
   "license": "BSD-3-Clause",
