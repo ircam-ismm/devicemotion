@@ -2,7 +2,7 @@
   "name": "@ircam/devicemotion",
   "version": "1.2.2",
   "description": "Low level library dedicated at normalizing devicemotion across browsers",
-  "main": "dist/devicemotion.js",
+  "main": "devicemotion.js",
   "author": "Benjamin Matuszewski",
   "license": "BSD-3-Clause",
   "publishConfig": {
@@ -15,15 +15,7 @@
     "watch": "npm run clean && npm run transpile && chokidar src -c \"npm run transpile\""
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.2",
     "platform-detect": "^3.0.0"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.10.2",
-    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
-    "chokidar": "^3.4.0",
-    "chokidar-cli": "^2.1.0",
-    "concurrently": "^5.2.0"
-  }
+  "devDependencies": {}
 }

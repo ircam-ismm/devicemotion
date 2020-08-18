@@ -6,6 +6,11 @@ import browser from 'platform-detect/browser.mjs';
 const { windows, android, macos, ios, linuxBased } = os;
 const { chrome, edge, safari, firefox } = browser;
 
+// warn on http protocol
+if (window.location.protocol === 'http:') {
+  console.warn('[devicemotion] the application is accessed through "http" protocol, be aware that recent browsers require an "https" connection to access motion sensors');
+}
+
 /**
  *
  * partial interface Window {
@@ -106,7 +111,7 @@ const devicemotion = {
       this._processFunction = this._check;
 
       /**
-       * if we have no event after 500ms (in desktop browser that implement
+       * if we have no event after 1s (in desktop browser that implement
        * the API and seems to say nothing about that), we consider that the
        * API is not available.
        */
@@ -250,6 +255,7 @@ const devicemotion = {
 
     if (!window.DeviceMotionEvent) {
       this._available = 'denied';
+
     // iOS 13+
     } else if (window.DeviceMotionEvent.requestPermission) {
       const permission = await window.DeviceMotionEvent.requestPermission();
@@ -265,7 +271,7 @@ const devicemotion = {
       // Safari 12.2.x and 12.3 require to enable a flag in Settings
       // Chrome Android goes there too (tested v83)
       //
-      // here we still have desktop browsers that implements to API but will
+      // here we still have desktop browsers that implements the API but will
       // never fire any event (OSX Chrome and Firefox, Windows TBD).
       // they will thus be matched by the `init` method
       const available = await this._init();
