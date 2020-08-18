@@ -252,11 +252,10 @@ const devicemotion = {
     // If not `https` connection:
     // * is not defined in Chrome Android (checked version 77)
     // * permission is denied in iOS > 13
-
     if (!window.DeviceMotionEvent) {
       this._available = 'denied';
 
-    // iOS 13+
+    // iOS >= 13 goes there
     } else if (window.DeviceMotionEvent.requestPermission) {
       const permission = await window.DeviceMotionEvent.requestPermission();
       let available = false;
@@ -266,14 +265,16 @@ const devicemotion = {
       }
 
       this._available = (available && permission === 'granted') ? 'granted' : 'denied';
+
+    // Safari < 12.1.3 goes there
+    // Chrome Android goes there too (tested v83)
+    //
+    // warning: Safari 12.2.x and 12.3 require to enable a flag in Settings
+    //
+    // here we still have desktop browsers that implements the API but will
+    // never fire any event (OSX Chrome and Firefox, Windows TBD).
+    // they will thus be catched by the `init` method
     } else {
-      // Safari < 12.1.3 goes there
-      // Safari 12.2.x and 12.3 require to enable a flag in Settings
-      // Chrome Android goes there too (tested v83)
-      //
-      // here we still have desktop browsers that implements the API but will
-      // never fire any event (OSX Chrome and Firefox, Windows TBD).
-      // they will thus be matched by the `init` method
       const available = await this._init();
 
       this._available = available ? 'granted' : 'denied';
