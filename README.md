@@ -46,7 +46,7 @@ devicemotion.addEventListener(e => {
 });
 ```
 
-**Note:** The event object is internally reused by the library, so it's the responsibility of the application to copy the data if needed.
+**Note:** The event object is internally reused by the library, therefore it's the responsibility of the application to copy the data if needed.
 
 #### `devicemotion.removeEventListener(callback: Function) -> void`
 
