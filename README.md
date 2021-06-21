@@ -32,14 +32,17 @@ Request permission to access motion sensors, this method should be called on the
 
 The callback will be called with the data formatted as specificied in [https://www.w3.org/TR/orientation-event/#devicemotion](https://www.w3.org/TR/orientation-event/#devicemotion)
 
-```
+```js
 devicemotion.addEventListener(e => {
   console.log(e);
 
-  // e.interval
-  // accelerationIncludingGravity = { x, y, z } // m/s2
-  // rotationRate = { alpha, beta, gamma } // deg/s
-  // // acceleration = { x, y, z }
+  /*
+  e = { 
+    interval // ms
+    accelerationIncludingGravity = { x, y, z } // m/s2
+    rotationRate = { alpha, beta, gamma } // deg/s
+  }
+  */
 });
 ```
 
