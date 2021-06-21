@@ -24,11 +24,11 @@ if (permission === 'granted') {
 
 ## API
 
-### async devicemotion.requestPermission() -> Promise('granted' | 'refused')
+### `async devicemotion.requestPermission() -> Promise('granted' | 'refused')`
 
 Request permission to access motion sensors, this method should be called on the startup of your application, most browsers will prompt your users so that they authorize the sensors to be accessed by the application
 
-### devicemotion.addEventListener(callback)
+### `devicemotion.addEventListener(callback: Function) -> void`
 
 The callback will be called with the data formatted as specificied in [https://www.w3.org/TR/orientation-event/#devicemotion](https://www.w3.org/TR/orientation-event/#devicemotion)
 
@@ -45,7 +45,7 @@ devicemotion.addEventListener(e => {
 
 **Note:** The event object is internally reused by the library, so it's the responsibility of the application to copy the data if needed.
 
-### devicemotion.removeEventListener(callback)
+### `devicemotion.removeEventListener(callback: Function) -> void`
 
 ## License
 
