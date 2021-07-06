@@ -33,7 +33,7 @@
   // server. Both entries are required otherwise a self-signed certificate
   // is generated.
   "httpsInfos": {
-    "cert": "./certs/fullchain.pem",
-    "key": "./certs/privkey.pem",
+    "cert": null,
+    "key": null,
   },
 }
