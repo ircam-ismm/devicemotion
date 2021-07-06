@@ -1,15 +1,14 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
-import renderAppInitialization from '../views/renderAppInitialization';
-import devicemotion from '@ircam/devicemotion';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
+import devicemotion from '@ircam/devicemotion';
 import os from 'platform-detect/os.mjs';
 import browser from 'platform-detect/browser.mjs';
 const { windows, android, macos, ios, linuxBased } = os;
 const { chrome, edge, safari, firefox } = browser;
 
-
-class PlayerExperience extends Experience {
+class PlayerExperience extends AbstractExperience {
   constructor(client, config = {}, $container) {
     super(client);
 
@@ -19,7 +18,7 @@ class PlayerExperience extends Experience {
     // require services
     this.startSensors = this.startSensors.bind(this);
     // default initialization views
-    renderAppInitialization(client, config, $container);
+    renderInitializationScreens(client, config, $container);
   }
 
   async start() {

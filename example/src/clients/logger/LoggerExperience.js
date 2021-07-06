@@ -1,17 +1,18 @@
-import { Experience } from '@soundworks/core/client';
+import { AbstractExperience } from '@soundworks/core/client';
 import { render, html } from 'lit-html';
 import { repeat } from 'lit-html/directives/repeat'
-import renderAppInitialization from '../views/renderAppInitialization';
+import renderInitializationScreens from '@soundworks/template-helpers/client/render-initialization-screens.js';
 
-import '../views/elements/sw-signal';
-import sineGenerator from '../utils/sineGenerator.js';
+import '@ircam/simple-components/sc-signal.js';
 
-class LoggerExperience extends Experience {
+class LoggerExperience extends AbstractExperience {
   constructor(client, config, $container) {
     super(client);
 
     this.config = config;
     this.$container = $container;
+
+    renderInitializationScreens(client, config, $container);
   }
 
   start() {
@@ -43,14 +44,14 @@ class LoggerExperience extends Experience {
       if (this.playerGuis.has(data[0])) {
         const { $acc, $gyro } = this.playerGuis.get(data[0]);
 
-        $acc.frame = {
+        $acc.value = {
           time: data[7],
-          value: [data[1] / 9.81, data[2] / 9.81, data[3] / 9.81]
+          data: [data[1], data[2], data[3]]
         };
 
-        $gyro.frame = {
+        $gyro.value = {
           time: data[7],
-          value: [data[4] / 180, data[5] / 180, data[6] / 180]
+          data: [data[4], data[5], data[6]]
         };
       }
     });
@@ -77,16 +78,16 @@ class LoggerExperience extends Experience {
         ">
           <h2 style="font-size: 16px; margin: 10px 0">accelerationIncludingGravity (accelerometer)</h2>
           <ul>
-            <li>x: <span style="color: #4682B4">blue</span>
-            <li>y: <span style="color: #ffa500">orange</span>
-            <li>z: <span style="color: #00e600">green</span>
-          </li>
+            <li>x: <span style="color: #4682B4">blue</span></li>
+            <li>y: <span style="color: #ffa500">orange</span></li>
+            <li>z: <span style="color: #00e600">green</span></li>
+          </ul>
           <h2 style="font-size: 16px; margin: 10px 0">rotationRate (gyroscopes)</h2>
           <ul>
-            <li>alpha (yaw): <span style="color: #4682B4">blue</span>
-            <li>beta (pitch): <span style="color: #ffa500">orange</span>
-            <li>gamma (roll): <span style="color: #00e600">green</span>
-          </li>
+            <li>alpha (yaw): <span style="color: #4682B4">blue</span></li>
+            <li>beta (pitch): <span style="color: #ffa500">orange</span></li>
+            <li>gamma (roll): <span style="color: #00e600">green</span></li>
+          </ul>
         </div>
         ${repeat(players, (player) => player.id, player => {
           return html`
@@ -96,17 +97,21 @@ class LoggerExperience extends Experience {
             ">
               <h2 style="font-size: 13px; margin: 10px 0">id: ${player.id}</h2>
               <h3>acc</h3>
-              <sw-signal id="acc-${player.id}"
+              <sc-signal id="acc-${player.id}"
                 duration="2"
-              ></sw-signal>
+                min="-10"
+                max="10"
+              ></sc-signal>
               <h3>gyro</h3>
-              <sw-signal id="gyro-${player.id}"
+              <sc-signal id="gyro-${player.id}"
                 duration="2"
-              ></sw-signal>
+                min="-180"
+                max="180"
+              ></sc-signal>
             </div>
           `
         })}
-        <!-- <sw-signal></sw-signal> -->
+        <!-- <sc-signal></sc-signal> -->
       </div>
 
       <!-- informations -->
