@@ -51,7 +51,7 @@ let accelerationIncludingGravityProvided = false;
 let accelerationProvided = false;
 let rotationRateProvided = false;
 
-let chromeVersion = (android && chrome && getChromeVersion()) || null;
+let chromeVersion = (android && chrome && getChromeVersion()) || null;
 
 const RAD_TO_DEG = 180 / Math.PI;
 
