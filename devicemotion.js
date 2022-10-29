@@ -6,11 +6,6 @@ import browser from 'platform-detect/browser.mjs';
 const { windows, android, macos, ios, linuxBased } = os;
 const { chrome, edge, safari, firefox } = browser;
 
-// warn on http protocol
-if (window.location.protocol === 'http:') {
-  console.warn('[devicemotion] the application is accessed through "http" protocol, be aware that recent browsers require an "https" connection to access motion sensors');
-}
-
 /**
  *
  * partial interface Window {
@@ -238,6 +233,11 @@ const devicemotion = {
 
 
   async requestPermission() {
+    // warn on http protocol
+    if (window.location.protocol === 'http:') {
+      console.warn('[@ircam/devicemotion] The application is accessed through "http" protocol, be aware that recent browsers require a secure "https" connection to access motion sensors');
+    }
+
     // return already determined permission
     // also prevent `_process` to be registered twice`
     if (this._available !== null) {
